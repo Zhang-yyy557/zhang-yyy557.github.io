@@ -1,240 +1,339 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
-<HEAD>
-    <META NAME="Generator" CONTENT="EditPlus">
-    <META NAME="Author" CONTENT="">
-    <META NAME="Keywords" CONTENT="">
-    <META NAME="Description" CONTENT="">
-    <style>
-        html, body{
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-        .container{
-            float: left;
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            background-color: #000;
-        }
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>向向向星宇宇宇</title>
+    <link rel="stylesheet" href="xxy.css">
 
-    </style>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-</HEAD>
- 
-<BODY>
-    
-    <div id="jsi-cherry-container" class="container"></div>
+    <!-- Google Font-->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&display=swap">
 
-    <div class="text">
 
+    <!-- ================ 动画外部链接 =============== -->
+        <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+      />
+
+    <!-- ====================== 提示框外部链接 ================== -->
+        <!-- 引入 SweetAlert CSS 和 JS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+
+    <!-- ====================================================== -->
+
+
+</head>
+<!-- background-attachment设置背景固定 background-repeat -->
+<body background="pic/4.jpg" style="background-size: 100% 100%; background-attachment: fixed; background-repeat: no-repeat;">
+
+    <div class="title-box">
+        <div class="title-item1" style="letter-spacing: 5px; color: black;">
+            <b> To 星星 ~</b>
+        </div>
+        <div class="title-item2" style="letter-spacing: 8px; color: black;">
+            <b>小张有话想对你说~</b>
+            
+        </div>
     </div>
 
-<script>
-    var RENDERER = {
-        INIT_CHERRY_BLOSSOM_COUNT : 30,
-        MAX_ADDING_INTERVAL : 10,
- 
-        init : function(){
-            this.setParameters();
-            this.reconstructMethods();
-            this.createCherries();
-            this.render();
-        },
-        setParameters : function(){
-            this.$container = $('#jsi-cherry-container');
-            this.width = this.$container.width();
-            this.height = this.$container.height();
-            this.context = $('<canvas />').attr({width : this.width, height : this.height}).appendTo(this.$container).get(0).getContext('2d');
-            this.cherries = [];
-            this.maxAddingInterval = Math.round(this.MAX_ADDING_INTERVAL * 1000 / this.width);
-            this.addingInterval = this.maxAddingInterval;
-        },
-        reconstructMethods : function(){
-            this.render = this.render.bind(this);
-        },
-        createCherries : function(){
-            for(var i = 0, length = Math.round(this.INIT_CHERRY_BLOSSOM_COUNT * this.width / 1000); i < length; i++){
-                this.cherries.push(new CHERRY_BLOSSOM(this, true));
-            }
-        },
-        render : function(){
-            requestAnimationFrame(this.render);
-            this.context.clearRect(0, 0, this.width, this.height);
- 
-            this.cherries.sort(function(cherry1, cherry2){
-                return cherry1.z - cherry2.z;
-            });
-            for(var i = this.cherries.length - 1; i >= 0; i--){
-                if(!this.cherries[i].render(this.context)){
-                    this.cherries.splice(i, 1);
-                }
-            }
-            if(--this.addingInterval == 0){
-                this.addingInterval = this.maxAddingInterval;
-                this.cherries.push(new CHERRY_BLOSSOM(this, false));
-            }
-        }
-    };
-    var CHERRY_BLOSSOM = function(renderer, isRandom){
-        this.renderer = renderer;
-        this.init(isRandom);
-    };
-    CHERRY_BLOSSOM.prototype = {
-        FOCUS_POSITION : 300,
-        FAR_LIMIT : 600,
-        MAX_RIPPLE_COUNT : 100,
-        RIPPLE_RADIUS : 100,
-        SURFACE_RATE : 0.5,
-        SINK_OFFSET : 20,
- 
-        init : function(isRandom){
-            this.x = this.getRandomValue(-this.renderer.width, this.renderer.width);
-            this.y = isRandom ? this.getRandomValue(0, this.renderer.height) : this.renderer.height * 1.5;
-            this.z = this.getRandomValue(0, this.FAR_LIMIT);
-            this.vx = this.getRandomValue(-2, 2);
-            this.vy = -2;
-            this.theta = this.getRandomValue(0, Math.PI * 2);
-            this.phi = this.getRandomValue(0, Math.PI * 2);
-            this.psi = 0;
-            this.dpsi = this.getRandomValue(Math.PI / 600, Math.PI / 300);
-            this.opacity = 0;
-            this.endTheta = false;
-            this.endPhi = false;
-            this.rippleCount = 0;
- 
-            var axis = this.getAxis(),
-                theta = this.theta + Math.ceil(-(this.y + this.renderer.height * this.SURFACE_RATE) / this.vy) * Math.PI / 500;
-            theta %= Math.PI * 2;
- 
-            this.offsetY = 40 * ((theta <= Math.PI / 2 || theta >= Math.PI * 3 / 2) ? -1 : 1);
-            this.thresholdY = this.renderer.height / 2 + this.renderer.height * this.SURFACE_RATE * axis.rate;
-            this.entityColor = this.renderer.context.createRadialGradient(0, 40, 0, 0, 40, 80);
-            this.entityColor.addColorStop(0, 'hsl(330, 70%, ' + 50 * (0.3 + axis.rate) + '%)');
-            this.entityColor.addColorStop(0.05, 'hsl(330, 40%,' + 55 * (0.3 + axis.rate) + '%)');
-            this.entityColor.addColorStop(1, 'hsl(330, 20%, ' + 70 * (0.3 + axis.rate) + '%)');
-            this.shadowColor = this.renderer.context.createRadialGradient(0, 40, 0, 0, 40, 80);
-            this.shadowColor.addColorStop(0, 'hsl(330, 40%, ' + 30 * (0.3 + axis.rate) + '%)');
-            this.shadowColor.addColorStop(0.05, 'hsl(330, 40%,' + 30 * (0.3 + axis.rate) + '%)');
-            this.shadowColor.addColorStop(1, 'hsl(330, 20%, ' + 40 * (0.3 + axis.rate) + '%)');
-        },
-        getRandomValue : function(min, max){
-            return min + (max - min) * Math.random();
-        },
-        getAxis : function(){
-            var rate = this.FOCUS_POSITION / (this.z + this.FOCUS_POSITION),
-                x = this.renderer.width / 2 + this.x * rate,
-                y = this.renderer.height / 2 - this.y * rate;
-            return {rate : rate, x : x, y : y};
-        },
-        renderCherry : function(context, axis){
-            context.beginPath();
-            context.moveTo(0, 40);
-            context.bezierCurveTo(-60, 20, -10, -60, 0, -20);
-            context.bezierCurveTo(10, -60, 60, 20, 0, 40);
-            context.fill();
- 
-            for(var i = -4; i < 4; i++){
-                context.beginPath();
-                context.moveTo(0, 40);
-                context.quadraticCurveTo(i * 12, 10, i * 4, -24 + Math.abs(i) * 2);
-                context.stroke();
-            }
-        },
-        render : function(context){
-            var axis = this.getAxis();
- 
-            if(axis.y == this.thresholdY && this.rippleCount < this.MAX_RIPPLE_COUNT){
-                context.save();
-                context.lineWidth = 2;
-                context.strokeStyle = 'hsla(0, 0%, 100%, ' + (this.MAX_RIPPLE_COUNT - this.rippleCount) / this.MAX_RIPPLE_COUNT + ')';
-                context.translate(axis.x + this.offsetY * axis.rate * (this.theta <= Math.PI ? -1 : 1), axis.y);
-                context.scale(1, 0.3);
-                context.beginPath();
-                context.arc(0, 0, this.rippleCount / this.MAX_RIPPLE_COUNT * this.RIPPLE_RADIUS * axis.rate, 0, Math.PI * 2, false);
-                context.stroke();
-                context.restore();
-                this.rippleCount++;
-            }
-            if(axis.y < this.thresholdY || (!this.endTheta || !this.endPhi)){
-                if(this.y <= 0){
-                    this.opacity = Math.min(this.opacity + 0.01, 1);
-                }
-                context.save();
-                context.globalAlpha = this.opacity;
-                context.fillStyle = this.shadowColor;
-                context.strokeStyle = 'hsl(330, 30%,' + 40 * (0.3 + axis.rate) + '%)';
-                context.translate(axis.x, Math.max(axis.y, this.thresholdY + this.thresholdY - axis.y));
-                context.rotate(Math.PI - this.theta);
-                context.scale(axis.rate * -Math.sin(this.phi), axis.rate);
-                context.translate(0, this.offsetY);
-                this.renderCherry(context, axis);
-                context.restore();
-            }
-            context.save();
-            context.fillStyle = this.entityColor;
-            context.strokeStyle = 'hsl(330, 40%,' + 70 * (0.3 + axis.rate) + '%)';
-            context.translate(axis.x, axis.y + Math.abs(this.SINK_OFFSET * Math.sin(this.psi) * axis.rate));
-            context.rotate(this.theta);
-            context.scale(axis.rate * Math.sin(this.phi), axis.rate);
-            context.translate(0, this.offsetY);
-            this.renderCherry(context, axis);
-            context.restore();
- 
-            if(this.y <= -this.renderer.height / 4){
-                if(!this.endTheta){
-                    for(var theta = Math.PI / 2, end = Math.PI * 3 / 2; theta <= end; theta += Math.PI){
-                        if(this.theta < theta && this.theta + Math.PI / 200 > theta){
-                            this.theta = theta;
-                            this.endTheta = true;
-                            break;
-                        }
-                    }
-                }
-                if(!this.endPhi){
-                    for(var phi = Math.PI / 8, end = Math.PI * 7 / 8; phi <= end; phi += Math.PI * 3 / 4){
-                        if(this.phi < phi && this.phi + Math.PI / 200 > phi){
-                            this.phi = Math.PI / 8;
-                            this.endPhi = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            if(!this.endTheta){
-                if(axis.y == this.thresholdY){
-                    this.theta += Math.PI / 200 * ((this.theta < Math.PI / 2 || (this.theta >= Math.PI && this.theta < Math.PI * 3 / 2)) ? 1 : -1);
-                }else{
-                    this.theta += Math.PI / 500;
-                }
-                this.theta %= Math.PI * 2;
-            }
-            if(this.endPhi){
-                if(this.rippleCount == this.MAX_RIPPLE_COUNT){
-                    this.psi += this.dpsi;
-                    this.psi %= Math.PI * 2;
-                }
-            }else{
-                this.phi += Math.PI / ((axis.y == this.thresholdY) ? 200 : 500);
-                this.phi %= Math.PI;
-            }
-            if(this.y <= -this.renderer.height * this.SURFACE_RATE){
-                this.x += 2;
-                this.y = -this.renderer.height * this.SURFACE_RATE;
-            }else{
-                this.x += this.vx;
-                this.y += this.vy;
-            }
-            return this.z > -this.FOCUS_POSITION && this.z < this.FAR_LIMIT && this.x < this.renderer.width * 1.5;
-        }
-    };
-    $(function(){
-        RENDERER.init();
-    });
-</script>
-</BODY>
-</HTML>
+    <div class="ikon0" id="ikon_cat">
+        <img src="pic/猫猫选中.png" alt="" onclick="show_another_tip()">
+    </div>
+
+
+    <div class="carousel-container ">
+        <div class="dots">
+            <span class="dot active" onclick="currentSlide(0)">开篇</span>
+            <span class="dot" onclick="currentSlide(1)">可爱的星星</span>
+            <span class="dot" onclick="currentSlide(2)">一些小故事</span>
+            <span class="dot" onclick="currentSlide(3)">致星星的一封信</span>
+        </div>
+
+        <div class="carousel">
+            <!-- 页面1 -->
+            <div class="carousel-item active">
+                <div class="container">
+                    <div class="ikon1_first_box">
+                        <div class="ikon1_box">
+                            <img src="pic/ikon2.jpg" alt="大熊猫" onclick="showchat()" >
+                        </div>
+                        <div class="ikon1_chat">
+                            <h1 align="center">欢迎来到Zhangyyy的小世界</h1>
+                            <p align="center">
+                                <b>小向~还记得我很久之前跟你说的“惊喜和惊吓”吗 这就是我蓄谋已久的“惊喜和惊吓”啦</b>
+                            </p>
+                            <p align="center">
+                                <b>希望不会真的吓到你 下面的内容是我一直想对你说的话(超认真超正经)</b>
+                            </p>
+                            <p align="center">
+                                <b>可能你看到这里已经猜到了 我要说什么了(也说不定没想那么多 哈哈哈哈哈哈)</b>
+                            </p>
+                            <p align="left" style="color: coral;letter-spacing: 5px; font-size: 14px;">
+                                <b>之后的内容要认真读完哦 有很多tips记得看哟 例如下面这个：</b>
+                            </p>
+                            <p align="left" style="letter-spacing: 5px; color: coral; font-size: 14px;">
+                                <b>张:点一下上面的猫猫头有惊喜~</b>
+                            </p>
+                            
+                        </div>
+                    </div>
+                    <div class="ikon2_second_box" id="whole_ikon2_box">
+                        <div class="ikon2_box">
+                            <img src="pic/ikon3.jpg" alt="胡思乱想" onclick="Go_to_Confuse()" >
+                        </div>
+                        <div class="ikon2_chat" >
+                            <h2 align="center">张说：呜呜呜 真的要哭了</h2>
+                            <p align="center">
+                                <b>小熊猫啊 你知道吗 现在我的心情就跟左边的一样一样的：既复杂又紧张 各种胡思乱想</b>
+                            <p align="center">
+                                <b>没关系的吧 反正她又不可能吃了我 对吧对吧 没事的没事的没事的</b>
+                            </p>
+                            <p align="center">
+                                <b>啊啊啊啊啊 没关系 她要真想吃掉我的话 吃掉就吃掉吧 只要她不要不理我就行</b>
+                            </p>  
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+            <!-- 页面2 -->
+            <div class="carousel-item">
+                <div class="container">
+                    <div id="comment_text" style="
+                        position: absolute;
+                        top: 3px;left: 10px;  
+                        height: 50px;width: 1050px;
+                        color: black; 
+                        font-size: 18px;
+                        text-align:left;
+                        padding-left: 15px;
+                        font-family:STLiti;
+                        letter-spacing: 3px;
+                        line-height: 22px;
+                        ">
+                    tips : 点一下中间的图片!
+                    </div>
+
+                    <div class="slide-box">
+                        <div class="banner-box"></div>
+                            <button class="slide-left-btn material-icons"></button>
+                            <button class="slide-right-btn material-icons"></button>
+                        <div class="pagination-box"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 页面3 -->
+            <div class="carousel-item">
+                <div class="container">
+                    <!-- <ul>
+                        <li>聊了好久？漂流聊到3点</li>
+                        <li>见面？很紧张 感受</li>
+                        <li>遇到酒鬼？很担心</li>
+                        <li>相似的经历？共情又珍惜</li>
+                        <li>每个分享故事的夜晚？高中生活、以前的经历、未来、囧事、秘密</li>
+                        <li>之后的每天每天都想给你分享日常？照片、游戏、段子、鬼故事、吐槽校园生活</li>
+                        <li>很想逗你开心？跳舞、拍自拍、搞笑的聊天记录、</li>
+                        <li>一直很想见你？国庆、寒假约定(拍照、篮球、猫咖、看中医、带你去看花溪的风景、台球)</li>
+                        <li>很想往你的理想型去发展和改变？感觉第一</li>
+                        <li>赖着你粘着你是心里话？</li>
+                        <li>玩得好的男生？绕弯子？</li>
+                        <li>同频？unkown</li>
+                        <li>缘分？相互喜欢？</li>
+                        <li>幼稚？想找一个陪我一起幼稚的人</li>
+                        <li>和她很像？</li>
+                        <li>多久喜欢？安慰、温暖、幸运、性格</li>
+                    </ul> -->
+                    <h1>故事线</h1>
+                    <div class="story-container">
+                        <div class="story active"><h3>故事1</h3>
+                            <p>
+                                8.22
+                                <br>
+                                &nbsp; &nbsp; &nbsp; &nbsp; 还记得这一天吗，这是我第一次和你聊到深夜，从我漂流落水开始，聊到高中生活
+                                <br>
+                                大学生活，再到性格上的重新认识。我对你的印象有了很多改变，唯一不变的是我仍然觉
+                                <br>
+                                得你如高中一般：开朗、热心、单纯还有善良。
+                                <br>
+                                &nbsp; &nbsp; &nbsp; &nbsp; 实际上，在这一天前，我并没有想过我和你会聊得这么投机，因为在此之前我一直
+                                <br>
+                                认为我和你是两个世界的人，就如你所说的，高中觉得我好高冷，不想跟你们一起玩。
+                                <br>
+                                maybe，你可能说的是对的，我对我自己也不太了解，有时候自己也会很矛盾。但是从
+                                <br>
+                                今晚开始，我觉得我和你也可以是一个世界的人了，可能在你安慰我的某个时刻，亦或是
+                                <br>
+                                相互之间鼓励的一些话语，就开始这样觉得了。
+                                <br>
+                                &nbsp; &nbsp; &nbsp; &nbsp; 总而言之，在今晚我重新认识了一个叫向星宇的女孩子，她很温柔，就像冬日里的
+                                <br>
+                                暖阳，温暖着世界，亦温暖着我。
+                            </p>
+                        </div>
+                        <div class="story"><h3>故事2</h3>
+                            <p>
+                                8.29
+                                <br>
+                                &nbsp; &nbsp; &nbsp; &nbsp; 2024年8月29号，我对这一天的记忆尤为深刻，因为这一天和你见面啦，可能你觉得
+                                <br>
+                                这就是普通的见面，但是我真的很少单约女孩子出来，而且这个女孩子还是向星宇，可能
+                                <br>
+                                你会觉得我又夸张了，但是我可以认真的告诉你，在去见你的路上，我一路心里都砰砰跳，
+                                <br>
+                                在车上我会想，一会见你我应该以什么样的方式去面对你。听到这里你可能觉得我太刻意，
+                                <br>
+                                应该放轻松，应该随意一点。但是我想说，因为是你，所以我就很想认真对待，我会想很
+                                <br>
+                                很多事情：想接下来的安排、想怎么样才能照顾到你、想一会儿我应该讲怎么样的话......
+                                <br>
+                                &nbsp; &nbsp; &nbsp; &nbsp; 说到这里，其实相比起我想去观山湖拍风景，我更想去见你。一开始我跟你说我想去
+                                <br>
+                                你那边拍一些照片，其实呢，也是我找的借口啦，哈哈哈。你可能会想，如果当时你拒绝
+                                <br>
+                                说不让我来呢，其实我一开始也有想过你会拒绝，因为就像你说的，对我的印象很高冷，
+                                <br>
+                                我俩可能不太搭边，会非常尴尬。但我真的很想见你，所以我决定勇敢一回、豪赌一把
+                                <br>
+                                
+                            </p>
+                        </div>
+                        <div class="story"><h3>故事3</h3>
+                            <p>
+                                8.30
+                                <br>
+                                &nbsp; &nbsp; &nbsp; &nbsp;最后一天了，我们都将离开这座热情、温暖、有你亦有我的城市。在临走前，我总
+                                <br>
+                                幻想也许今天还能再见到你，不过转头一想，我并不想突然的出现打扰到你的生活，可能
+                                <br>
+                                你自己也有感觉到我的冒然闯入，哈哈哈。anyway，希望你呢不要介意。
+                                <br>
+                                &nbsp; &nbsp; &nbsp; &nbsp;你说你要去拍照片，而我刚从机场回来，被他们拉去了清吧。想到自己马上就要离开，
+                                <br>
+                                心里竟有些许的悲凉和不舍，也许是舍不得家里的大床、舍不得贵阳的朋友们、又或许是
+                                <br>
+                                舍不得这座有你的城市，可能你觉得我又在说这种假惺惺的话了，哈哈哈，maybe是假的，
+                                <br>
+                                也可能是真的，我的心理总是复杂的，但是想到见不到你，我心里确实空空的。三两杯酒
+                                <br>
+                                下肚，酒过三巡，愈发地看不清楚清吧台上的霓虹灯了。你说你遇上了酒鬼坏蛋，我真的
+                                <br>
+                                恨不得马上冲到你的面前，警告那个酒鬼。我盯着手机等着你的讯息，我甚至在想一会儿
+                                <br>
+                                如何跟在座的解释，我想说的那句话还是咽了下去烂在了肚子里。你告诉我已经安全到家
+                            </p>
+                        </div>
+                        <div class="story"><h3>故事4</h3>
+                            <p>
+                                9.3
+                                <br>
+                                &nbsp; &nbsp; &nbsp; &nbsp;今天可能对于你来说是平凡的一天，但对于我来说却是印象深刻。凌晨一两点，我们
+                                <br>
+                                分享故事，聊到了情感的问题，我与你交换故事，类似的经历总让人感同深受，内心是无
+                                <br>
+                                限的共情、心疼和珍惜。看到平时乖乖的、傻傻的你也会遇到这样的经历，真的我心里挺
+                                <br>
+                                不好受的，但想到感情不就如此嘛，你情我愿，不分对错。
+                                <br>
+                                &nbsp; &nbsp; &nbsp; &nbsp;anyway，我觉得过去那些所谓不好的经历，其实也并没有什么，至少呢在这些经历中
+                                <br>
+                                我学会了，如何去尊重和爱，以及应该如何对待我爱的人。这可能就是所谓的成长吧。
+                                <br>
+                                &nbsp; &nbsp; &nbsp; &nbsp; 算下来，我的上一段情感经历像是已经过去了一个世纪了，期间虽然遇到了很多人，
+                                <br>
+                                但是我真的感觉我那颗心已经没有力再去爱了，他们说我是水泥封心、说我挑三拣四、
+                                <br>
+                                说我还处在上一段感情中。其实并不然，而是我没有感受到喜欢的那种感觉，那种纯粹
+                                <br>
+                                的感觉，发自内心的感觉。之前可能没有，现在我感受到了。
+                            </p>
+                        </div>
+                        <div class="story"><h3>故事5</h3>
+                            <p>这是故事一的详细描述。</p>
+                        </div>
+                        <div class="story"><h3>故事6</h3>
+                            <p>这是故事二的详细描述。</p>
+                        </div>
+                        <div class="story"><h3>故事7</h3>
+                            <p>这是故事三的详细描述。</p>
+                        </div>
+                        <div class="story"><h3>故事8</h3>
+                            <p>这是故事四的详细描述。</p>
+                        </div>
+                        <div class="story"><h3>故事9</h3>
+                            <p>这是故事一的详细描述。</p>
+                        </div>
+                        <div class="story"><h3>故事10</h3>
+                            <p>这是故事二的详细描述。</p>
+                        </div>
+                        <div class="story"><h3>故事11</h3>
+                            <p>这是故事三的详细描述。</p>
+                        </div>
+                        <div class="story"><h3>故事12</h3>
+                            <p>这是故事四的详细描述。</p>
+                        </div>
+                        <div class="story"><h3>故事13</h3>
+                            <p>这是故事三的详细描述。</p>
+                        </div>
+                        <div class="story"><h3>故事14</h3>
+                            <p>这是故事四的详细描述。</p>
+                        </div>
+                    </div>
+                    <button id="nextButton" onclick="alert_stroy()">下一条故事</button>
+                    <button id="toggleProgressButton">切换进度</button>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+                    <div class="progress-buttons" id="progressButtons"></div>
+
+                </div>
+            </div>
+
+            <!-- 页面4 -->
+            <div class="carousel-item">
+                <div class="container" style="position: relative; top: 40px; left:100px; background-color: bisque; text-align: center; padding-top: 33px; border-radius: 20px; width: 700px;height: 550px;letter-spacing: 1px;">
+                    <h1 class="lyric" id="ly1" style="font-size: 35px;">爱在西元前 - 周杰伦 (Jay Chou)</h1>
+                    <p class="lyric" id="ly2">
+                        古巴比伦王颁布了 汉摩拉比法典
+                    </p>
+                    <p class="lyric" id="ly3">
+                        刻在黑色的玄武岩 距今已经三千七百多年
+                    </p>
+                    <p class="lyric" id="ly4">
+                        你在橱窗前 凝视碑文的字眼
+                    </p>
+                    <p class="lyric" id="ly5">
+                        我却在旁静静欣赏 你那张我深爱的脸
+                    </p>
+                    <p class="lyric" id="ly6">
+                        祭司神殿征战 弓箭是谁的从前
+                    </p>
+                    <p class="lyric" id="ly7">
+                        喜欢在人潮中 你只属于我的那画面
+                    </p>
+                    <p class="lyric" id="ly8">
+                        经过苏美女神身边 我以女神之名许愿
+                    </p>
+                    <div class="envolop_button_box" id="envolop_button_box" onclick="goToSecondPage()"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    
+    <script src="./xxy.js"></script>
+</body>
+</html>
+
+
+
+
+
