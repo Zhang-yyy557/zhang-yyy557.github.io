@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>向向向星宇宇宇</title>
+    <link rel="stylesheet" href="xxy.css">
+
+    <!-- Google Font-->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&display=swap">
+
+
+    <!-- ================ 动画外部链接 =============== -->
+        <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+      />
+
+    <!-- ====================== 提示框外部链接 ================== -->
+        <!-- 引入 SweetAlert CSS 和 JS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+
+    <!-- ====================================================== -->
+
+
+</head>
+<!-- background-attachment设置背景固定 background-repeat -->
+<body background="pic/4.jpg" style="background-size: 100% 100%; background-attachment: fixed; background-repeat: no-repeat;">
+
+    <div class="title-box">
+        <div class="title-item1" style="letter-spacing: 5px; color: black;">
+            <b> To 向星宇 ~</b>
+        </div>
+        <div class="title-item2" style="letter-spacing: 8px; color: black;">
+            <b>生日快乐！公主殿下！</b>
+            
+        </div>
+    </div>
+
+    <div class="ikon0" id="ikon_cat">
+        <img src="pic/猫猫选中.png" alt="" onclick="show_another_tip()">
+    </div>
+
+
+    <div class="carousel-container ">
+        <div class="dots">
+            <span class="dot active" onclick="currentSlide(0)">开篇</span>
+            <span class="dot" onclick="currentSlide(1)">可爱的星星</span>
+            <span class="dot" onclick="currentSlide(2)">致公主的信</span>
+        </div>
+
+        <div class="carousel">
+            <!-- 页面1 -->
+            <div class="carousel-item active">
+                <div class="container">
+                    <div class="ikon1_first_box">
+                        <div class="ikon1_box">
+                            <img src="pic/ikon2.jpg" alt="大熊猫" onclick="showchat()" >
+                        </div>
+                        <div class="ikon1_chat">
+                            <h1 align="center">嘿！向星宇！！</h1>
+                            <p align="center">
+                                <b>今天是特别的一天,今天你说了算。公主 ! 生日快乐 !!!</b>
+                            </p>
+                            <p align="center">
+                                <b>虽然公主又长大了一岁,但是在我眼里你一直是一个可爱小孩。</b>
+                            </p>
+                            <p align="center">
+                                <b>我想了很久,你的21岁我应该怎么为你过,应该送些什么东西。</b>
+                            </p>
+                            <p align="center">
+                                <b>但是因为我一直欠你一册四字诗，送什么都显得那么不合适。</b>
+                            </p>
+                            <p align="center">
+                                <b> 因此呢,我想把我真正想送你的留到后面。今天呢,可能我准备</b>
+                            </p>  
+                            <p align="center">
+                                <b>的东西可能没有那么好,但也有足够的用心，嘿嘿嘿。</b>
+                            </p>                             
+                            <p align="left" style="color: coral;letter-spacing: 5px; font-size: 14px;">
+                                <b>有很多tips(彩蛋)记得看哟 例如下面这个：</b>
+                            </p>
+                            <p align="left" style="letter-spacing: 5px; color: coral; font-size: 14px;">
+                                <b>张:点一下上面的猫猫头有惊喜~</b>
+                            </p>
+                            
+                        </div>
+                    </div>
+                    <div class="ikon2_second_box" id="whole_ikon2_box">
+                        <div class="ikon2_box">
+                            <img src="pic/蛋糕.png" alt="生日" onclick="Go_to_Confuse()" >
+                        </div>
+                        <div class="ikon2_chat" >
+                            <h2 align="center">今天是笨蛋学姐的生日</h2>
+                            <p align="center">
+                                <b>也是我给向星宇过的第一个生日，虽然呢，我不能到福州来见她</b>
+                            <p align="center">
+                                <b>给她现场过一个生日，但如果她想的话，其实我也可以去福州。哈哈哈</b>
+                            </p>
+                            <p align="center">
+                                <b>不过呢，就像她说的慢热的，现在她肯定会说“不用不用,没关系”,哈哈哈哈哈哈</b>
+                            </p>
+                            <p align="center"> 
+                                <b>也许下一个冬天,我就可以给她过一个完完整整的生日啦，当面的跟她说“生日快乐，公主”</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+            <!-- 页面2 -->
+            <div class="carousel-item">
+                <div class="container">
+                    <div id="comment_text" style="
+                        position: absolute;
+                        top: 3px;left: 10px;  
+                        height: 50px;width: 1050px;
+                        color: black; 
+                        font-size: 18px;
+                        text-align:left;
+                        padding-left: 15px;
+                        font-family:STLiti;
+                        letter-spacing: 3px;
+                        line-height: 22px;
+                        ">
+                    tips : 点一下中间的图片!
+                    </div>
+
+                    <div class="slide-box">
+                        <div class="banner-box"></div>
+                            <button class="slide-left-btn material-icons"></button>
+                            <button class="slide-right-btn material-icons"></button>
+                        <div class="pagination-box"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 页面3 -->
+            <div class="carousel-item">
+                <div class="container" style="position: relative; top: 40px; left:200px; background-color: bisque; text-align: center; padding-top: 33px; border-radius: 20px; width: 700px;height: 550px;letter-spacing: 1px;">
+                    <h1 class="lyric" id="ly1" style="font-size: 35px;">Happy Birthday,My Princess</h1>
+                    <p class="lyric" id="ly2">
+                        向星宇你说说，我该祝你些什么呢
+                    </p>
+                    <p class="lyric" id="ly3">
+                        想祝你顺遂,但长路漫漫并非坦途;
+                    </p>
+                    <p class="lyric" id="ly4">
+                        想祝你快乐,但未来不可能只有欢欣,失意在所难免;
+                    </p>
+                    <p class="lyric" id="ly5">
+                        想祝你自由,但我们总有背负的责任。
+                    </p>
+                    <p class="lyric" id="ly6">
+                        那就祝你乐观且坚强、勇敢而豁达。
+                    </p>
+                    <p class="lyric" id="ly7">
+                        我希望你明白：不管发生什么事情,
+                    </p>
+                    <p class="lyric" id="ly8">
+                        你的快乐才是最大的快乐。
+                    </p>
+                    <p class="lyric" id="ly9">
+                        生日快乐，向星宇。
+                    </p>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+    
+    <script src="./xxy.js"></script>
+</body>
+</html>
+
+
+
+
+
